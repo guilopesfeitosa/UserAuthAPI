@@ -11,12 +11,15 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
 
+public class User {
   @Id @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
+
   private String name;
+
   private String email;
+
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 }
