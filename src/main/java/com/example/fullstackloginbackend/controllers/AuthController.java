@@ -8,6 +8,7 @@ import com.example.fullstackloginbackend.exceptions.UserNotFoundException;
 import com.example.fullstackloginbackend.infra.security.TokenService;
 import com.example.fullstackloginbackend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,7 @@ public class AuthController {
   private final TokenService tokenService;
 
   @PostMapping("/sign-in")
-  public ResponseEntity signin(@RequestBody SignInRequestDto body) {
+  public ResponseEntity<AuthResponseDto> signIn(@RequestBody SignInRequestDto body) {
     User user = this.userRepository.findByEmail(body.email()).orElseThrow(UserNotFoundException::new);
 
     if (!passwordEncoder.matches(body.password(), user.getPassword())) {
@@ -33,6 +34,6 @@ public class AuthController {
     }
 
     String token = this.tokenService.generateToken(user);
-    return ResponseEntity.ok(new AuthResponseDto(user.getName(), token));
+    return ResponseEntity.status(HttpStatus.OK).body(new AuthResponseDto(user.getName(), token));
   }
 }

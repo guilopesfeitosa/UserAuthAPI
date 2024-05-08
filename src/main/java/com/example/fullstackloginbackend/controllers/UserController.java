@@ -2,7 +2,7 @@ package com.example.fullstackloginbackend.controllers;
 
 import com.example.fullstackloginbackend.domain.user.UpdateUserDto;
 import com.example.fullstackloginbackend.domain.user.User;
-import com.example.fullstackloginbackend.dto.SignUpRequestDto;
+import com.example.fullstackloginbackend.domain.user.CreateUserDto;
 import com.example.fullstackloginbackend.domain.user.UserResponseDto;
 import com.example.fullstackloginbackend.exceptions.EmailAlreadyExistsException;
 import com.example.fullstackloginbackend.exceptions.UserNotFoundException;
@@ -18,14 +18,14 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
   @PostMapping
-  public ResponseEntity<UserResponseDto> createUser(@RequestBody @Valid SignUpRequestDto body) {
+  public ResponseEntity<UserResponseDto> createUser(@RequestBody @Valid CreateUserDto body) {
     Optional<User> user = this.userRepository.findByEmail(body.email());
 
     if (user.isPresent()) {
@@ -68,7 +68,6 @@ public class UserController {
 
   @PutMapping("/{id}")
   public ResponseEntity<UserResponseDto> updateUser(@PathVariable String id, @RequestBody @Valid UpdateUserDto body) {
-    System.out.println(id);
     Optional<User> optionalUser = this.userRepository.findById(id);
 
     if (optionalUser .isEmpty()) {
