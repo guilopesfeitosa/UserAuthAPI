@@ -9,5 +9,4 @@ public class FullstackLoginBackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FullstackLoginBackendApplication.class, args);
 	}
-
 }
