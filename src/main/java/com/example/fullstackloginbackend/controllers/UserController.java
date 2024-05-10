@@ -1,9 +1,6 @@
 package com.example.fullstackloginbackend.controllers;
 
-import com.example.fullstackloginbackend.domain.user.UpdateUserDto;
-import com.example.fullstackloginbackend.domain.user.User;
-import com.example.fullstackloginbackend.domain.user.CreateUserDto;
-import com.example.fullstackloginbackend.domain.user.UserResponseDto;
+import com.example.fullstackloginbackend.domain.user.*;
 import com.example.fullstackloginbackend.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +17,12 @@ public class UserController {
   private final UserService userService;
 
   @PostMapping
-  public ResponseEntity<UserResponseDto> createUser(@RequestBody @Valid CreateUserDto body) {
+  public ResponseEntity<CreateUserResponseDto> createUser(@RequestBody @Valid CreateUserRequestDto body) {
     return userService.create(body);
   }
 
   @GetMapping
-  public ResponseEntity<List<User>> getAllUsers() {
+  public ResponseEntity<List<UserResponseDto>> getAllUsers() {
     return userService.getAll();
   }
 
@@ -37,7 +34,7 @@ public class UserController {
   @PutMapping("/{id}")
   public ResponseEntity<UserResponseDto> updateUser(
       @PathVariable UUID id,
-      @ModelAttribute @Valid UpdateUserDto body
+      @ModelAttribute @Valid UpdateUserRequestDto body
   ) {
     return userService.update(id, body);
   }

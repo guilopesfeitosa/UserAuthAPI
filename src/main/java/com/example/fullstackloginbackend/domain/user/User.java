@@ -4,6 +4,7 @@ import com.example.fullstackloginbackend.domain.images.Image;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.UUID;
 
@@ -21,6 +22,7 @@ public class User {
 
   private String name;
 
+  @Column(unique = true)
   private String email;
 
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -29,4 +31,10 @@ public class User {
   @OneToOne
   @JoinColumn(name = "image_id")
   private Image profileImage;
+
+  public User(CreateUserRequestDto data, PasswordEncoder passwordEncoder) {
+    this.name = data.name();
+    this.email = data.email();
+    this.password = passwordEncoder.encode(data.password());
+  }
 }

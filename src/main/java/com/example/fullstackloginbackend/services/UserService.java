@@ -1,10 +1,7 @@
 package com.example.fullstackloginbackend.services;
 
 import com.example.fullstackloginbackend.domain.images.Image;
-import com.example.fullstackloginbackend.domain.user.CreateUserDto;
-import com.example.fullstackloginbackend.domain.user.UpdateUserDto;
-import com.example.fullstackloginbackend.domain.user.User;
-import com.example.fullstackloginbackend.domain.user.UserResponseDto;
+import com.example.fullstackloginbackend.domain.user.*;
 import com.example.fullstackloginbackend.exceptions.EmailAlreadyExistsException;
 import com.example.fullstackloginbackend.exceptions.UserNotFoundException;
 import com.example.fullstackloginbackend.repositories.UserRepository;
@@ -17,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +23,7 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
   private final ImageService imageService;
 
-  public ResponseEntity<UserResponseDto> create(CreateUserDto body) {
+  public ResponseEntity<CreateUserResponseDto> create(CreateUserRequestDto body) {
     try {
       Optional<User> optionalUser = userRepository.findByEmail(body.email());
 
@@ -33,27 +31,33 @@ public class UserService {
         throw new EmailAlreadyExistsException();
       }
 
-      User newUser = new User();
-      newUser.setName(body.name());
-      newUser.setEmail(body.email());
-      newUser.setPassword(passwordEncoder.encode(body.password()));
+      User newUser = new User(body, passwordEncoder);
       userRepository.save(newUser);
 
-      return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponseDto(
+      return ResponseEntity.status(HttpStatus.CREATED).body(new CreateUserResponseDto(
           newUser.getId(),
           newUser.getName(),
-          newUser.getEmail(),
-          newUser.getProfileImage().getUrl()
+          newUser.getEmail()
       ));
     } catch (Exception e) {
       throw new RuntimeException("Error creating user: ", e);
     }
   }
 
-  public ResponseEntity<List<User>> getAll() {
+  public ResponseEntity<List<UserResponseDto>> getAll() {
     try {
       List<User> allUsers = this.userRepository.findAll();
-      return ResponseEntity.status(HttpStatus.OK).body(allUsers);
+
+      List<UserResponseDto> filteredUsers = allUsers.stream()
+          .map(user -> new UserResponseDto(
+              user.getId(),
+              user.getName(),
+              user.getEmail(),
+              user.getProfileImage() != null ? user.getProfileImage().getUrl() : null
+          ))
+          .collect(Collectors.toList());
+
+      return ResponseEntity.status(HttpStatus.OK).body(filteredUsers);
     } catch (Exception e) {
       throw new RuntimeException("Error finding users: ", e);
     }
@@ -78,7 +82,7 @@ public class UserService {
     }
   }
 
-  public ResponseEntity<UserResponseDto> update(UUID id, UpdateUserDto body) {
+  public ResponseEntity<UserResponseDto> update(UUID id, UpdateUserRequestDto body) {
     try {
       Optional<User> optionalUser = this.userRepository.findById(id);
 
