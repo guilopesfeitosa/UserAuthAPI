@@ -3,4 +3,6 @@ package com.example.fullstackloginbackend.repositories;
 import com.example.fullstackloginbackend.domain.animals.Animal;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AnimalsRepository extends JpaRepository<Animal, String> {}
+import java.util.UUID;
+
+public interface AnimalsRepository extends JpaRepository<Animal, UUID> {}

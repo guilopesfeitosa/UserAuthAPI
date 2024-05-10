@@ -1,19 +1,49 @@
 package com.example.fullstackloginbackend.services;
 
+import com.example.fullstackloginbackend.domain.images.Image;
+import com.example.fullstackloginbackend.repositories.ImageRepository;
 import com.example.fullstackloginbackend.utils.CloudinaryHandler;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ImageService {
 
-  @Autowired
-  private CloudinaryHandler cloudinaryHandler;
+  private final CloudinaryHandler cloudinaryHandler;
+  private final ImageRepository imageRepository;
 
-  public String uploadImage(MultipartFile file) throws IOException {
-    return this.cloudinaryHandler.upload(file);
+  public Image uploadImageInDbAndCloudinary(MultipartFile file) {
+    try {
+      Image image = cloudinaryHandler.upload(file);
+
+      Image newImage = new Image();
+
+      newImage.setUrl(image.getUrl());
+      newImage.setPublicId(image.getPublicId());
+
+      imageRepository.save(newImage);
+
+      return newImage;
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public void removeImageInDbAndCloudinary(UUID id) {
+    try {
+      Optional<Image> optionalImage = imageRepository.findById(id);
+
+      if (optionalImage.isPresent()) {
+        cloudinaryHandler.remove(optionalImage.get().getPublicId());
+        imageRepository.delete(optionalImage.get());
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 }

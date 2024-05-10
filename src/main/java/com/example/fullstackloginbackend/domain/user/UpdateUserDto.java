@@ -1,3 +1,5 @@
 package com.example.fullstackloginbackend.domain.user;
 
-public record UpdateUserDto(String name, String email, String password) {}
+import org.springframework.web.multipart.MultipartFile;
+
+public record UpdateUserDto(String name, String email, String password, MultipartFile profileImage) {}

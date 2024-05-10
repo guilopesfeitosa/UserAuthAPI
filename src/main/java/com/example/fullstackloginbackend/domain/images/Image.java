@@ -3,16 +3,21 @@ package com.example.fullstackloginbackend.domain.images;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
+@Entity
 @Table(name = "images")
-@Entity(name = "images")
-@EqualsAndHashCode(of = "id")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Image {
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private String id;
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
   private String url;
+
+  private String publicId;
 }
