@@ -12,7 +12,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Image {
-
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;

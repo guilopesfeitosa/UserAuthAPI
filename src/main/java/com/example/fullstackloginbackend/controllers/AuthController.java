@@ -5,7 +5,7 @@ import com.example.fullstackloginbackend.dto.AuthResponseDto;
 import com.example.fullstackloginbackend.dto.SignInRequestDto;
 import com.example.fullstackloginbackend.exceptions.InvalidPasswordException;
 import com.example.fullstackloginbackend.exceptions.UserNotFoundException;
-import com.example.fullstackloginbackend.infra.security.TokenService;
+import com.example.fullstackloginbackend.services.TokenService;
 import com.example.fullstackloginbackend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final TokenService tokenService;

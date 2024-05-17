@@ -13,7 +13,6 @@ import java.util.UUID;
 @Component
 public class CloudinaryHandler {
   Dotenv dotenv = Dotenv.load();
-
   private final Cloudinary cloudinary;
 
   public CloudinaryHandler() {

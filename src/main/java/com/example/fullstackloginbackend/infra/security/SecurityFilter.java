@@ -2,11 +2,11 @@ package com.example.fullstackloginbackend.infra.security;
 
 import com.example.fullstackloginbackend.domain.user.User;
 import com.example.fullstackloginbackend.repositories.UserRepository;
+import com.example.fullstackloginbackend.services.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,11 +18,13 @@ import java.util.Collections;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
-  @Autowired
-  TokenService tokenService;
+  private final TokenService tokenService;
+  private final UserRepository userRepository;
 
-  @Autowired
-  UserRepository userRepository;
+  public SecurityFilter(TokenService tokenService, UserRepository userRepository) {
+    this.tokenService = tokenService;
+    this.userRepository = userRepository;
+  }
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

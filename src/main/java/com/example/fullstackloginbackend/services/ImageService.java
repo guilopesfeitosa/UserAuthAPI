@@ -13,7 +13,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ImageService {
-
   private final CloudinaryHandler cloudinaryHandler;
   private final ImageRepository imageRepository;
 
