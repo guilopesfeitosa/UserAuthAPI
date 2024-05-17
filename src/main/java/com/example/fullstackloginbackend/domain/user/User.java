@@ -32,9 +32,22 @@ public class User {
   @JoinColumn(name = "image_id")
   private Image profileImage;
 
+  public User(UUID id, String name, String email, Image profileImage) {
+    this.id = id;
+    this.name = name;
+    this.email = email;
+    this.profileImage = profileImage;
+  }
+
   public User(CreateUserRequestDto data, PasswordEncoder passwordEncoder) {
     this.name = data.name();
     this.email = data.email();
     this.password = passwordEncoder.encode(data.password());
+  }
+
+  public User(CreateUserRequestDto data) {
+    this.name = data.name();
+    this.email = data.email();
+    this.password = data.password();
   }
 }

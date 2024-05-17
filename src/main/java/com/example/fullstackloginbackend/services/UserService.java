@@ -40,7 +40,8 @@ public class UserService {
           newUser.getEmail()
       ));
     } catch (Exception e) {
-      throw new RuntimeException("Error creating user: ", e);
+      // throw new RuntimeException("Error creating user: ", e);
+      throw new EmailAlreadyExistsException();
     }
   }
 
@@ -75,7 +76,7 @@ public class UserService {
           user.get().getId(),
           user.get().getName(),
           user.get().getEmail(),
-          user.get().getProfileImage().getUrl()
+          user.get().getProfileImage() != null ? user.get().getProfileImage().getUrl() : null
       ));
     } catch (Exception e) {
       throw new RuntimeException("Error finding user: ", e);
@@ -113,7 +114,7 @@ public class UserService {
           user.getId(),
           user.getName(),
           user.getEmail(),
-          user.getProfileImage().getUrl()
+          user.getProfileImage() != null ? user.getProfileImage().getUrl() : null
       ));
     } catch (Exception e) {
       throw new RuntimeException("Error updating user: ", e);

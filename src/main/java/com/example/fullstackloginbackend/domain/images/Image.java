@@ -20,4 +20,9 @@ public class Image {
   private String url;
 
   private String publicId;
+
+  public Image(String publicId, String url) {
+    this.publicId = publicId;
+    this.url = url;
+  }
 }
